@@ -4,13 +4,13 @@
   "description": "IMAP-based email analyzer (NestJS)",
   "license": "MIT",
 
-
   "scripts": {
-  "build": "npm run prebuild && tsc",
-  "prebuild": "rimraf dist",
-  "start": "node dist/main.js",
-  "start:dev": "ts-node -r tsconfig-paths/register src/main.ts"
-},
+    "prebuild": "npx rimraf dist",
+    "build": "npm run prebuild && tsc",
+    "start": "node dist/main.js",
+    "start:dev": "ts-node -r tsconfig-paths/register src/main.ts"
+  },
+
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.2.0",
@@ -24,6 +24,7 @@
     "mailparser": "^3.7.4",
     "mongoose": "^8.5.0"
   },
+
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
     "@nestjs/schematics": "^10.0.0",
@@ -32,6 +33,7 @@
     "@types/mailparser": "^3.4.6",
     "@types/node": "^20.12.12",
     "prettier": "^3.2.5",
-    "typescript": "^5.6.2"
+    "typescript": "^5.6.2",
+    "rimraf": "^5.0.5"
   }
 }
