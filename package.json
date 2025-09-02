@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "mongodb": "^6.19.0"
+  },
+  "devDependencies": {
+    "rimraf": "^6.0.1"
   }
 }
