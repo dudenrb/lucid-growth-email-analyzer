@@ -18,15 +18,19 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
+    "imap": "^0.8.19",
     "imapflow": "^1.0.164",
+    "mailparser": "^3.7.4",
     "mongoose": "^8.5.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.3.2",
     "@nestjs/schematics": "^10.0.0",
     "@nestjs/testing": "^10.0.0",
+    "@types/imap": "^0.8.42",
+    "@types/mailparser": "^3.4.6",
+    "@types/node": "^20.12.12",
     "prettier": "^3.2.5",
-    "typescript": "^5.6.2",
-    "@types/node": "^20.12.12"
+    "typescript": "^5.6.2"
   }
 }

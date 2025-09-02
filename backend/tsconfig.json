@@ -1,6 +1,9 @@
 {
   "compilerOptions": {
     "module": "commonjs",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "jsx": "react-jsx",
     "declaration": false,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -16,3 +19,4 @@
   },
   "include": ["src/**/*"]
 }
+

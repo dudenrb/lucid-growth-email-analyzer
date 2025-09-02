@@ -17,16 +17,19 @@ let EmailController = class EmailController {
         this.emailService = emailService;
     }
     getConfig() {
-        return this.emailService.getConfig();
+        return {
+            testAddress: process.env.TEST_ADDRESS || process.env.IMAP_USER || '',
+            subjectToken: process.env.SUBJECT_TOKEN || '',
+        };
     }
-    async scanEmails() {
-        return this.emailService.scanEmails();
+    async scan() {
+        return this.emailService.scanLatestEmail();
     }
     async latest() {
-        return this.emailService.latest();
+        return this.emailService.getLatest();
     }
     async all() {
-        return this.emailService.all();
+        return this.emailService.getAll();
     }
 };
 exports.EmailController = EmailController;
@@ -41,7 +44,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
-], EmailController.prototype, "scanEmails", null);
+], EmailController.prototype, "scan", null);
 __decorate([
     (0, common_1.Get)('latest'),
     __metadata("design:type", Function),

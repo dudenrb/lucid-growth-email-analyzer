@@ -9,41 +9,48 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.EmailLogSchema = exports.EmailLog = void 0;
+exports.EmailSchema = exports.Email = void 0;
 const mongoose_1 = require("@nestjs/mongoose");
-let EmailLog = class EmailLog {
+let Email = class Email {
 };
-exports.EmailLog = EmailLog;
+exports.Email = Email;
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], EmailLog.prototype, "subject", void 0);
+], Email.prototype, "subject", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], EmailLog.prototype, "from", void 0);
+], Email.prototype, "from", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], EmailLog.prototype, "to", void 0);
+], Email.prototype, "to", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: Object }),
-    __metadata("design:type", Object)
-], EmailLog.prototype, "headers", void 0);
+    (0, mongoose_1.Prop)({ required: true, unique: true }),
+    __metadata("design:type", String)
+], Email.prototype, "messageId", void 0);
 __decorate([
     (0, mongoose_1.Prop)({ type: [String], default: [] }),
     __metadata("design:type", Array)
-], EmailLog.prototype, "receivingChain", void 0);
+], Email.prototype, "receivingChain", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ default: '' }),
+    (0, mongoose_1.Prop)({ required: true }),
     __metadata("design:type", String)
-], EmailLog.prototype, "esp", void 0);
+], Email.prototype, "esp", void 0);
 __decorate([
-    (0, mongoose_1.Prop)({ type: Object }),
+    (0, mongoose_1.Prop)({
+        type: Object,
+        default: {},
+    }),
     __metadata("design:type", Object)
-], EmailLog.prototype, "raw", void 0);
-exports.EmailLog = EmailLog = __decorate([
-    (0, mongoose_1.Schema)({ timestamps: true, collection: 'email_logs' })
-], EmailLog);
-exports.EmailLogSchema = mongoose_1.SchemaFactory.createForClass(EmailLog);
+], Email.prototype, "raw", void 0);
+__decorate([
+    (0, mongoose_1.Prop)({ default: Date.now }),
+    __metadata("design:type", Date)
+], Email.prototype, "receivedAt", void 0);
+exports.Email = Email = __decorate([
+    (0, mongoose_1.Schema)({ timestamps: true })
+], Email);
+exports.EmailSchema = mongoose_1.SchemaFactory.createForClass(Email);
 //# sourceMappingURL=email.schema.js.map

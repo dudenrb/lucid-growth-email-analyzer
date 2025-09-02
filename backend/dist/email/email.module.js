@@ -17,9 +17,7 @@ let EmailModule = class EmailModule {
 exports.EmailModule = EmailModule;
 exports.EmailModule = EmailModule = __decorate([
     (0, common_1.Module)({
-        imports: [
-            mongoose_1.MongooseModule.forFeature([{ name: email_schema_1.EmailLog.name, schema: email_schema_1.EmailLogSchema }]),
-        ],
+        imports: [mongoose_1.MongooseModule.forFeature([{ name: email_schema_1.Email.name, schema: email_schema_1.EmailSchema }])],
         controllers: [email_controller_1.EmailController],
         providers: [email_service_1.EmailService],
     })
