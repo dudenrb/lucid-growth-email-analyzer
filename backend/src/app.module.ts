@@ -1,11 +1,16 @@
+// src/app.module.ts
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
-import { cfg } from './common/config';
 import { EmailModule } from './email/email.module';
-import { HealthController } from './health/health.controller';
+import { HealthModule } from './health/health.module';
 
 @Module({
-  imports: [MongooseModule.forRoot(cfg.mongoUri), EmailModule],
-  controllers: [HealthController],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }), // reads .env in dev, and env vars in production
+    MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lucidgrowth'),
+    EmailModule,
+    HealthModule,
+  ],
 })
 export class AppModule {}

@@ -7,6 +7,7 @@ export declare class EmailService implements OnModuleInit, OnModuleDestroy {
     private client;
     constructor(emailModel: Model<EmailDocument>);
     onModuleInit(): Promise<void>;
+    private fetchRecent;
     onModuleDestroy(): Promise<void>;
     private connectImap;
     private startIdle;

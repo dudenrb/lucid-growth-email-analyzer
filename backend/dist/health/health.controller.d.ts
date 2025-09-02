@@ -1,5 +1,6 @@
 export declare class HealthController {
-    ok(): {
+    getHealth(): {
         ok: boolean;
+        ts: string;
     };
 }

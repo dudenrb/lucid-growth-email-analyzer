@@ -12,16 +12,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.HealthController = void 0;
 const common_1 = require("@nestjs/common");
 let HealthController = class HealthController {
-    ok() { return { ok: true }; }
+    getHealth() {
+        return { ok: true, ts: new Date().toISOString() };
+    }
 };
 exports.HealthController = HealthController;
 __decorate([
-    (0, common_1.Get)('/health'),
+    (0, common_1.Get)(),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], HealthController.prototype, "ok", null);
+], HealthController.prototype, "getHealth", null);
 exports.HealthController = HealthController = __decorate([
-    (0, common_1.Controller)()
+    (0, common_1.Controller)('health')
 ], HealthController);
 //# sourceMappingURL=health.controller.js.map

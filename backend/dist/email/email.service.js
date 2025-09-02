@@ -37,7 +37,48 @@ let EmailService = EmailService_1 = class EmailService {
     }
     async onModuleInit() {
         await this.connectImap();
+        await this.fetchRecent();
         this.startIdle();
+    }
+    async fetchRecent() {
+        var _a, e_1, _b, _c;
+        try {
+            const lock = await this.client.getMailboxLock(config_1.cfg.imap.mailbox);
+            try {
+                const exists = this.client.mailbox && typeof this.client.mailbox === 'object' && 'exists' in this.client.mailbox
+                    ? this.client.mailbox.exists
+                    : 0;
+                if (exists > 0) {
+                    const seq = `${Math.max(1, exists - 9)}:${exists}`;
+                    const fetched = await this.client.fetch(seq, {
+                        source: true,
+                        envelope: true,
+                        internalDate: true,
+                    });
+                    try {
+                        for (var _d = true, fetched_1 = __asyncValues(fetched), fetched_1_1; fetched_1_1 = await fetched_1.next(), _a = fetched_1_1.done, !_a; _d = true) {
+                            _c = fetched_1_1.value;
+                            _d = false;
+                            const f = _c;
+                            await this.handleMessage(f);
+                        }
+                    }
+                    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                    finally {
+                        try {
+                            if (!_d && !_a && (_b = fetched_1.return)) await _b.call(fetched_1);
+                        }
+                        finally { if (e_1) throw e_1.error; }
+                    }
+                }
+            }
+            finally {
+                lock.release();
+            }
+        }
+        catch (err) {
+            this.log.error('❌ fetchRecent error', err);
+        }
     }
     async onModuleDestroy() {
         var _a;
@@ -54,14 +95,19 @@ let EmailService = EmailService_1 = class EmailService {
             auth: { user: config_1.cfg.imap.user, pass: config_1.cfg.imap.pass },
             logger: false,
         });
-        await this.client.connect();
-        await this.client.mailboxOpen(config_1.cfg.imap.mailbox);
-        this.log.log(`IMAP connected -> ${config_1.cfg.imap.user}/${config_1.cfg.imap.mailbox}`);
+        try {
+            await this.client.connect();
+            await this.client.mailboxOpen(config_1.cfg.imap.mailbox);
+            this.log.log(`✅ IMAP connected -> ${config_1.cfg.imap.user}/${config_1.cfg.imap.mailbox}`);
+        }
+        catch (err) {
+            throw new Error(`IMAP connection failed: ${String(err)}`);
+        }
     }
     startIdle() {
         (async () => {
             this.client.on('exists', async () => {
-                var _a, e_1, _b, _c;
+                var _a, e_2, _b, _c;
                 const lock = await this.client.getMailboxLock(config_1.cfg.imap.mailbox);
                 try {
                     if (this.client.mailbox &&
@@ -75,19 +121,19 @@ let EmailService = EmailService_1 = class EmailService {
                             internalDate: true,
                         });
                         try {
-                            for (var _d = true, fetched_1 = __asyncValues(fetched), fetched_1_1; fetched_1_1 = await fetched_1.next(), _a = fetched_1_1.done, !_a; _d = true) {
-                                _c = fetched_1_1.value;
+                            for (var _d = true, fetched_2 = __asyncValues(fetched), fetched_2_1; fetched_2_1 = await fetched_2.next(), _a = fetched_2_1.done, !_a; _d = true) {
+                                _c = fetched_2_1.value;
                                 _d = false;
                                 const f = _c;
                                 await this.handleMessage(f);
                             }
                         }
-                        catch (e_1_1) { e_1 = { error: e_1_1 }; }
+                        catch (e_2_1) { e_2 = { error: e_2_1 }; }
                         finally {
                             try {
-                                if (!_d && !_a && (_b = fetched_1.return)) await _b.call(fetched_1);
+                                if (!_d && !_a && (_b = fetched_2.return)) await _b.call(fetched_2);
                             }
-                            finally { if (e_1) throw e_1.error; }
+                            finally { if (e_2) throw e_2.error; }
                         }
                     }
                 }
@@ -95,8 +141,13 @@ let EmailService = EmailService_1 = class EmailService {
                     lock.release();
                 }
             });
-            await this.client.idle();
-        })().catch((e) => this.log.error('idle loop error', e));
+            try {
+                await this.client.idle();
+            }
+            catch (err) {
+                this.log.error('❌ IMAP idle loop error', err);
+            }
+        })().catch((e) => this.log.error('❌ idle loop crash', e));
     }
     async handleMessage(f) {
         var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
@@ -104,6 +155,7 @@ let EmailService = EmailService_1 = class EmailService {
             const source = f.source;
             const parsed = await (0, mailparser_1.simpleParser)(source);
             const subject = parsed.subject || '';
+            this.log.debug(`Processing subject: ${parsed.subject}`);
             if (!subject.includes(config_1.cfg.subjectToken))
                 return;
             const from = ((_a = parsed.from) === null || _a === void 0 ? void 0 : _a.text) ||
@@ -128,10 +180,10 @@ let EmailService = EmailService_1 = class EmailService {
                 mailbox: config_1.cfg.imap.mailbox,
                 rawHeaders: headersRaw,
             });
-            this.log.log(`Stored test email: ${doc._id} | ESP=${espType} | hops=${chain.length}`);
+            this.log.log(`📩 Stored test email: ${doc._id} | ESP=${espType} | hops=${chain.length}`);
         }
         catch (e) {
-            this.log.error('handleMessage error', e);
+            this.log.error('❌ handleMessage error', e);
             await this.emailModel.create({ error: String(e) });
         }
     }
