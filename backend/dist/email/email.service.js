@@ -31,6 +31,9 @@ const mailparser_1 = require("mailparser");
 const esp_detector_1 = require("./esp-detector");
 const parsers_1 = require("./parsers");
 let EmailService = EmailService_1 = class EmailService {
+    async getLatestParsedEmail() {
+        return { message: 'Latest parsed email not yet implemented' };
+    }
     constructor(emailModel) {
         this.emailModel = emailModel;
         this.log = new common_1.Logger(EmailService_1.name);

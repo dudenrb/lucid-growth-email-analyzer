@@ -18,6 +18,11 @@ export class EmailService implements OnModuleInit, OnModuleDestroy {
   private readonly log = new Logger(EmailService.name);
   private client!: ImapFlow;
 
+  async getLatestParsedEmail() {
+    // TODO: implement logic
+    // Example placeholder
+    return { message: 'Latest parsed email not yet implemented' };
+  }
   constructor(
     @InjectModel(Email.name) private emailModel: Model<EmailDocument>,
   ) {}

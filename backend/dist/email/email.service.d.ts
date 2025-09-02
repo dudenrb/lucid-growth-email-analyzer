@@ -5,6 +5,9 @@ export declare class EmailService implements OnModuleInit, OnModuleDestroy {
     private emailModel;
     private readonly log;
     private client;
+    getLatestParsedEmail(): Promise<{
+        message: string;
+    }>;
     constructor(emailModel: Model<EmailDocument>);
     onModuleInit(): Promise<void>;
     private fetchRecent;
