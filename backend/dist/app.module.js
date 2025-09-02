@@ -12,14 +12,15 @@ const config_1 = require("@nestjs/config");
 const mongoose_1 = require("@nestjs/mongoose");
 const email_module_1 = require("./email/email.module");
 const health_module_1 = require("./health/health.module");
+const config_2 = require("./common/config");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            config_1.ConfigModule.forRoot({ isGlobal: true }),
-            mongoose_1.MongooseModule.forRoot(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/lucidgrowth'),
+            config_1.ConfigModule.forRoot({ isGlobal: true, load: [config_2.appConfig] }),
+            mongoose_1.MongooseModule.forRoot(process.env.MONGO_URI),
             email_module_1.EmailModule,
             health_module_1.HealthModule,
         ],

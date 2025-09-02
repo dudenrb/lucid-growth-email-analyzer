@@ -1,20 +1,14 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "https://lucid-growth-email-analyzer.onrender.com";
+const base = import.meta.env.VITE_API_BASE as string;
 
-export async function fetchConfig() {
-  const res = await fetch(`${API_BASE_URL}/config`);
-  if (!res.ok) throw new Error("Failed to fetch config");
-  return res.json();
+async function j<T>(res: Response): Promise<T> {
+  if (!res.ok) throw new Error(await res.text());
+  return res.json() as Promise<T>;
 }
 
-export async function fetchEmails() {
-  const res = await fetch(`${API_BASE_URL}/emails`);
-  if (!res.ok) throw new Error("Failed to fetch emails");
-  return res.json();
-}
-
-export async function fetchLatestEmail() {
-  const res = await fetch(`${API_BASE_URL}/emails/latest`);
-  if (!res.ok) throw new Error("Failed to fetch latest email");
-  return res.json();
-}
+export const api = {
+  config: () => fetch(`${base}/email/config`).then(j),
+  scan: () => fetch(`${base}/email/scan`, { method: 'POST' }).then(j),
+  latest: () => fetch(`${base}/email/latest`).then(j),
+  all: () => fetch(`${base}/email/all`).then(j),
+  health: () => fetch(`${base}/health`).then(j),
+};

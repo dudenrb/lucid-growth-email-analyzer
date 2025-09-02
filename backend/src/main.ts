@@ -1,21 +1,27 @@
-// src/main.ts
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: ['error', 'warn', 'log', 'debug'] });
+  const app = await NestFactory.create(AppModule);
+  const config = app.get(ConfigService);
+  const port = Number(config.get('PORT') || 4000);
 
-  // Allow CORS for your frontend domain (set FRONTEND_URL in Render/Vercel)
-  const frontendUrl = process.env.FRONTEND_URL || '*';
   app.enableCors({
-    origin: frontendUrl,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    origin:
+      config.get('CORS_ORIGIN')?.split(',').map((s: string) => s.trim()) ?? true,
     credentials: true,
   });
 
-  const port = parseInt(process.env.PORT || '4000', 10);
+  // 👇 Add this to see actual errors in the console
+  app.useGlobalFilters({
+    catch(exception: any, host: any) {
+      console.error('Unhandled Exception:', exception);
+      throw exception;
+    },
+  } as any);
+
   await app.listen(port);
-  Logger.log(`NestJS server listening on port ${port}`);
+  console.log(`API running on :${port}`);
 }
 bootstrap();

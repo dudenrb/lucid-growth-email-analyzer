@@ -1,77 +1,62 @@
-import { useEffect, useState } from "react";
-import { fetchConfig, fetchEmails, fetchLatestEmail } from "./api";
+import React, { useState } from "react";
+import Timeline from "./components/Timeline";
 
-interface Email {
+export interface EmailDoc {
   _id: string;
+  subject: string;
   from: string;
   to: string;
-  subject: string;
-  espType: string;
-  date: string;
+  createdAt: string;
 }
 
 function App() {
-  const [config, setConfig] = useState<any>(null);
-  const [emails, setEmails] = useState<Email[]>([]);
-  const [latest, setLatest] = useState<Email | null>(null);
+  const [emails, setEmails] = useState<EmailDoc[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchConfig().then(setConfig).catch(console.error);
-    fetchEmails().then(setEmails).catch(console.error);
-    fetchLatestEmail().then(setLatest).catch(console.error);
-  }, []);
+  const scanEmails = async () => {
+    setError(null);
+    try {
+      const res = await fetch("http://localhost:4000/email/scan", {
+        method: "POST", // ✅ Corrected: must be POST
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!res.ok) {
+        throw new Error(`Scan failed: ${res.status}`);
+      }
+
+      const data = await res.json();
+      if (data && data.data) {
+        // Prepend new scanned email
+        setEmails((prev) => [data.data, ...prev]);
+      }
+    } catch (err: any) {
+      setError(err.message);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6">📧 Email Analyzer Dashboard</h1>
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center p-6">
+      <h1 className="text-3xl font-bold mb-4">📧 Lucid Growth Email Analyzer</h1>
 
-      {/* Config Section */}
-      {config && (
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h2 className="text-xl font-semibold mb-2">Config</h2>
-          <p><b>Test Address:</b> {config.testAddress}</p>
-          <p><b>Subject Token:</b> {config.subjectToken}</p>
-        </div>
+      <button
+        onClick={scanEmails}
+        className="px-6 py-2 mb-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+      >
+        Scan for New Emails
+      </button>
+
+      {error && (
+        <p className="text-red-500 font-semibold mb-4">Error: {error}</p>
       )}
 
-      {/* Latest Email Section */}
-      {latest && (
-        <div className="bg-blue-50 p-4 rounded-lg shadow mb-6">
-          <h2 className="text-xl font-semibold mb-2">Latest Test Email</h2>
-          <p><b>From:</b> {latest.from}</p>
-          <p><b>To:</b> {latest.to}</p>
-          <p><b>Subject:</b> {latest.subject}</p>
-          <p><b>ESP:</b> {latest.espType}</p>
-          <p><b>Date:</b> {new Date(latest.date).toLocaleString()}</p>
-        </div>
+      {emails.length === 0 ? (
+        <p className="text-gray-500">No emails scanned yet.</p>
+      ) : (
+        <Timeline emails={emails} />
       )}
-
-      {/* All Emails Section */}
-      <div className="bg-white p-4 rounded-lg shadow">
-        <h2 className="text-xl font-semibold mb-2">Recent Emails</h2>
-        <table className="min-w-full text-sm">
-          <thead>
-            <tr className="border-b">
-              <th className="text-left py-2">From</th>
-              <th className="text-left py-2">To</th>
-              <th className="text-left py-2">Subject</th>
-              <th className="text-left py-2">ESP</th>
-              <th className="text-left py-2">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {emails.map((email) => (
-              <tr key={email._id} className="border-b">
-                <td>{email.from}</td>
-                <td>{email.to}</td>
-                <td>{email.subject}</td>
-                <td>{email.espType}</td>
-                <td>{new Date(email.date).toLocaleString()}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
     </div>
   );
 }

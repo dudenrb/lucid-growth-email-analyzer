@@ -1,19 +1,26 @@
-import { Controller, Get } from '@nestjs/common';
-import { EmailsService } from './email.service';
+import { Controller, Get, Post } from '@nestjs/common';
+import { EmailService } from './email.service';
 
-@Controller('emails')
-export class EmailsController {
-  constructor(private readonly emailsService: EmailsService) {}
+@Controller('email')
+export class EmailController {
+  constructor(private readonly emailService: EmailService) {}
 
-  // GET /emails → return all emails
-  @Get()
-  async getAllEmails() {
-    return this.emailsService.findAll();
+  @Get('config')
+  getConfig() {
+    return this.emailService.getConfig();
   }
 
-  // GET /emails/latest → return the most recent email
+  @Post('scan')
+  async scanEmails() {
+    return this.emailService.scanEmails();
+  }
   @Get('latest')
-  async getLatestEmail() {
-    return this.emailsService.findLatest();
+  async latest() {
+    return this.emailService.latest();
+  }
+
+  @Get('all')
+  async all() {
+    return this.emailService.all();
   }
 }

@@ -2,18 +2,23 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const core_1 = require("@nestjs/core");
 const app_module_1 = require("./app.module");
-const common_1 = require("@nestjs/common");
+const config_1 = require("@nestjs/config");
 async function bootstrap() {
-    const app = await core_1.NestFactory.create(app_module_1.AppModule, { logger: ['error', 'warn', 'log', 'debug'] });
-    const frontendUrl = process.env.FRONTEND_URL || '*';
+    const app = await core_1.NestFactory.create(app_module_1.AppModule);
+    const config = app.get(config_1.ConfigService);
+    const port = Number(config.get('PORT') || 4000);
     app.enableCors({
-        origin: frontendUrl,
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        origin: config.get('CORS_ORIGIN')?.split(',').map((s) => s.trim()) ?? true,
         credentials: true,
     });
-    const port = parseInt(process.env.PORT || '4000', 10);
+    app.useGlobalFilters({
+        catch(exception, host) {
+            console.error('Unhandled Exception:', exception);
+            throw exception;
+        },
+    });
     await app.listen(port);
-    common_1.Logger.log(`NestJS server listening on port ${port}`);
+    console.log(`API running on :${port}`);
 }
 bootstrap();
 //# sourceMappingURL=main.js.map

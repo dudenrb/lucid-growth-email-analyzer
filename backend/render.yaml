@@ -1,8 +1,31 @@
 services:
   - type: web
-    name: backend-service
+    name: lucid-growth-email-analyzer
     env: node
-    rootDir: backend
-    buildCommand: npm install && npm run build
-    startCommand: npm start
     plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/main.js
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: IMAP_HOST
+        value: imap.gmail.com
+      - key: IMAP_PORT
+        value: 993
+      - key: IMAP_SECURE
+        value: "true"
+      - key: IMAP_USER
+        sync: false
+      - key: IMAP_PASS
+        sync: false
+      - key: MAILBOX
+        value: INBOX
+      - key: SUBJECT_TOKEN
+        sync: false
+      - key: TEST_ADDRESS
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://lucid-growth-email-analyzer-1.onrender.com

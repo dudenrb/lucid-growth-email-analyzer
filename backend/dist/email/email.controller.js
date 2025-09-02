@@ -16,19 +16,46 @@ let EmailController = class EmailController {
     constructor(emailService) {
         this.emailService = emailService;
     }
+    getConfig() {
+        return this.emailService.getConfig();
+    }
+    async scanEmails() {
+        return this.emailService.scanEmails();
+    }
     async latest() {
-        return this.emailService.getLatestParsedEmail();
+        return this.emailService.latest();
+    }
+    async all() {
+        return this.emailService.all();
     }
 };
 exports.EmailController = EmailController;
+__decorate([
+    (0, common_1.Get)('config'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], EmailController.prototype, "getConfig", null);
+__decorate([
+    (0, common_1.Post)('scan'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], EmailController.prototype, "scanEmails", null);
 __decorate([
     (0, common_1.Get)('latest'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], EmailController.prototype, "latest", null);
+__decorate([
+    (0, common_1.Get)('all'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], EmailController.prototype, "all", null);
 exports.EmailController = EmailController = __decorate([
-    (0, common_1.Controller)('emails'),
+    (0, common_1.Controller)('email'),
     __metadata("design:paramtypes", [email_service_1.EmailService])
 ], EmailController);
 //# sourceMappingURL=email.controller.js.map
