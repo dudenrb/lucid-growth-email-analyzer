@@ -4,10 +4,9 @@
   "description": "Lucid Growth Email Analyzer backend (NestJS + Mongo + IMAP)",
   "main": "dist/main.js",
   "scripts": {
-    "build": "nest build",
+    "build": "tsc -p tsconfig.build.json",
     "start": "node dist/main",
-    "start:dev": "nest start --watch",
-    "lint": "eslint '{src,test}/**/*.ts' --fix"
+    "start:dev": "nest start --watch"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
@@ -33,6 +32,6 @@
     "dotenv-cli": "^10.0.0",
     "ts-node": "^10.9.2",
     "ts-node-dev": "^2.0.0",
-    "typescript": "^5.6.0"
+    "typescript": "^5.9.2"
   }
 }
