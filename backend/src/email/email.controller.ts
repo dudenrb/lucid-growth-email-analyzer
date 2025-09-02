@@ -1,14 +1,19 @@
-// src/email/email.controller.ts
 import { Controller, Get } from '@nestjs/common';
-import { EmailService } from './email.service';
+import { EmailsService } from './email.service';
 
 @Controller('emails')
-export class EmailController {
-  constructor(private readonly emailService: EmailService) {}
+export class EmailsController {
+  constructor(private readonly emailsService: EmailsService) {}
 
+  // GET /emails → return all emails
+  @Get()
+  async getAllEmails() {
+    return this.emailsService.findAll();
+  }
+
+  // GET /emails/latest → return the most recent email
   @Get('latest')
-  async latest() {
-    // return a sample or real latest parsed email
-    return this.emailService.getLatestParsedEmail();
+  async getLatestEmail() {
+    return this.emailsService.findLatest();
   }
 }
