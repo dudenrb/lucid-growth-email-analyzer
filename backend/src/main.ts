@@ -41,10 +41,19 @@ async function bootstrap() {
   const origins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(',').map((s) => s.trim())
     : true;
-  app.enableCors({ origin: origins });
+  app.enableCors({
+  origin: [
+    'http://localhost:5173',
+    'https://lucid-growth-email-analyzer-1.onrender.com',
+  ],
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true,
+});
+
 
   const port = Number(process.env.PORT || 4000);
-  await app.listen(port);
+  await app.listen(process.env.PORT || 4000);
+
   console.log(`API running on :${port}`);
 }
 bootstrap();
